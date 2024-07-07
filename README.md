@@ -88,6 +88,98 @@ $ sudo docker exec -it postgres12 bash
 - SQL-запрос для выдачи списка пользователей с правами над таблицами test_db;
 - список пользователей с правами над таблицами test_db.
 
+```
+root@546abf9ea571:/# createdb test_db -U admin
+
+root@546abf9ea571:/# psql -d test_db -U admin
+
+psql (12.16 (Debian 12.16-1.pgdg120+1))
+
+Type "help" for help.
+
+
+
+test_db=# CREATE USER test_admin_user;
+
+CREATE ROLE
+
+test_db=# CREATE TABLE orders
+
+(
+
+   id SERIAL PRIMARY KEY,
+
+   наименование TEXT,
+
+   цена INTEGER
+
+);
+
+CREATE TABLE
+
+test_db=# CREATE TABLE clients
+
+(
+
+    id SERIAL PRIMARY KEY,
+
+    фамилия TEXT,
+
+    "страна проживания" TEXT,
+
+    заказ INTEGER,
+
+    FOREIGN KEY (заказ) REFERENCES orders(id)
+
+);
+
+CREATE TABLE
+
+test_db=# CREATE INDEX country_index ON clients ("страна проживания");
+
+CREATE INDEX
+
+test_db=# GRANT ALL ON TABLE orders TO test_admin_user;
+
+GRANT
+
+test_db=# GRANT ALL ON TABLE clients TO test_admin_user;
+
+GRANT
+
+test_db=# CREATE USER test_simple_user;
+
+CREATE ROLE
+
+test_db=# GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE orders TO test_simple_user;
+
+GRANT
+
+test_db=# GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE clients TO test_simple_user;
+
+GRANT
+
+test_db=# 
+```
+
+![alt text](https://github.com/MaratKN/bd-dev_02_SQL/blob/main/1.png)
+
+Итоговый список БД:
+
+![alt text](https://github.com/MaratKN/bd-dev_02_SQL/blob/main/2.png)
+
+Описание таблиц:
+
+![alt text](https://github.com/MaratKN/bd-dev_02_SQL/blob/main/3.png)
+
+Список пользователей с правами над таблицами test_db:
+
+test_db=# SELECT grantee, table_catalog, table_name, privilege_type FROM information_schema.table_privileges WHERE table_name IN ('orders','clients');
+
+![alt text](https://github.com/MaratKN/bd-dev_02_SQL/blob/main/4.png)
+
+
+
 ## Задача 3
 
 Используя SQL-синтаксис, наполните таблицы следующими тестовыми данными:
