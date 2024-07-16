@@ -282,11 +282,28 @@ Width - ожидаемый средний размер строк, выводи�
 Приведите список операций, который вы применяли для бэкапа данных и восстановления. 
 
 
+root@afde29351d74:/# su - postgres
 
-Просьба помочь. 
-Пытался создать дамп, а потом залить его в другом контейнере, но словил ошибку о том, что нету БД. Попытался скопировать БД из папки в папку, но не смог найти дамп. Подозреваю, что дамп даже не создался. 
-Что я сделал не так? Просьба помочь и пояснить.
-Заранее спасибо
+postgres@afde29351d74:~$ pg_dump test_db > /backup/dump999
+
+postgres@afde29351d74:~$ pg_dumpall > /backup/dumpall999
+
+marat@debian2:~/pgdump$ sudo docker stop afde29351d74
+
+marat@debian2:~/pgdump$ sudo nano docker-compose.yaml 
+
+marat@debian2:~/pgdump$ sudo docker compose up --detach
+
+marat@debian2:~/pgdump$ sudo docker exec -it marat-postgresql2-1 bash
+
+root@d39a79e66147:/# su - postgres
+
+postgres@d39a79e66147:~$ psql -f /backup/dumpall999
+
+postgres@d39a79e66147:~$ pg_dump < /backup/dump999
 
 ![alt text](https://github.com/MaratKN/bd-dev_02_SQL/blob/main/8.png)
+
+![alt text](https://github.com/MaratKN/bd-dev_02_SQL/blob/main/9.png)
+
 
